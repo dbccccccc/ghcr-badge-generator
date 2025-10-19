@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GHCR Badge Generator</title>
+    <meta
+      name="description"
+      content="Generate download badges for GitHub Container Registry packages without any build tools."
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="background-decoration">
+      <div class="gradient-orb orb-1"></div>
+      <div class="gradient-orb orb-2"></div>
+      <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <header class="page-header">
+      <div class="page-header__content">
+        <div class="header-badge">
+          <svg class="header-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
+          </svg>
+          <h1>GHCR Badge Generator</h1>
+        </div>
+        <p class="page-subtitle">
+          Build shields.io download badges for GitHub Container Registry packages in three quick steps.
+        </p>
+      </div>
+      <nav class="page-links">
+        <a href="https://github.com" target="_blank" rel="noreferrer" class="nav-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+        <a href="https://shields.io" target="_blank" rel="noreferrer" class="nav-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          shields.io
+        </a>
+        <a href="https://ghcr-badge.elias.eu.org" target="_blank" rel="noreferrer" class="nav-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4M12 8h.01"/>
+          </svg>
+          ghcr-badge API
+        </a>
+      </nav>
+    </header>
+
+    <main class="page-main">
+      <section class="card" id="step-repo">
+        <header class="card__header">
+          <span class="step-number">
+            <span class="step-number__inner">1</span>
+          </span>
+          <div>
+            <h2 class="card__title">Enter Repository URL</h2>
+            <p class="card__subtitle">Paste a GitHub repository URL such as https://github.com/owner/repo.</p>
+          </div>
+        </header>
+
+        <div class="field">
+          <label for="repo-url">Repository URL</label>
+          <div class="field__row">
+            <div class="input-wrapper">
+              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+              </svg>
+              <input
+                id="repo-url"
+                type="url"
+                required
+                placeholder="https://github.com/owner/repo"
+                autocomplete="off"
+              />
+            </div>
+            <button id="load-packages" type="button" class="button button--primary">
+              Next
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+          <p id="repo-status" class="hint" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="card is-hidden" id="step-package" aria-hidden="true">
+        <header class="card__header">
+          <span class="step-number">
+            <span class="step-number__inner">2</span>
+          </span>
+          <div>
+            <h2 class="card__title">Select Package</h2>
+            <p class="card__subtitle">
+              Pick the container package for this repository or enter a custom value.
+            </p>
+          </div>
+        </header>
+
+        <div class="field">
+          <label for="package-select">Suggested packages</label>
+          <div class="select-wrapper">
+            <select id="package-select"></select>
+            <svg class="select-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="package-input">Package name</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+            <input
+              id="package-input"
+              type="text"
+              placeholder="Defaults to the repository name"
+              autocomplete="off"
+            />
+          </div>
+          <p class="hint">Use only the package name, not the full ghcr.io path.</p>
+        </div>
+      </section>
+
+      <section class="card is-hidden" id="step-customize" aria-hidden="true">
+        <header class="card__header">
+          <span class="step-number">
+            <span class="step-number__inner">3</span>
+          </span>
+          <div>
+            <h2 class="card__title">Customize Badge</h2>
+            <p class="card__subtitle">Tweak the badge label, logo, color, and shields.io style.</p>
+          </div>
+        </header>
+
+        <div class="grid">
+          <div class="field">
+            <label for="badge-label">Badge label</label>
+            <input id="badge-label" type="text" value="ghcr pulls" />
+          </div>
+
+          <div class="field">
+            <label for="badge-logo">Logo</label>
+            <div class="select-wrapper">
+              <select id="badge-logo">
+                <option value="github">GitHub</option>
+                <option value="docker">Docker</option>
+                <option value="none">None</option>
+              </select>
+              <svg class="select-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="badge-color">Color</label>
+            <div class="select-wrapper">
+              <select id="badge-color">
+                <option value="default">Default</option>
+                <option value="2496ed">Blue (Docker)</option>
+                <option value="181717">Black (GitHub)</option>
+                <option value="success">Green</option>
+                <option value="orange">Orange</option>
+                <option value="red">Red</option>
+              </select>
+              <svg class="select-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="badge-style">Style</label>
+            <div class="select-wrapper">
+              <select id="badge-style">
+                <option value="flat">Flat</option>
+                <option value="flat-square">Flat square</option>
+                <option value="for-the-badge">For the badge</option>
+                <option value="plastic">Plastic</option>
+                <option value="social">Social</option>
+              </select>
+              <svg class="select-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card card--preview is-hidden" id="step-preview" aria-hidden="true">
+        <header class="card__header">
+          <div class="preview-header">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <div>
+              <h2 class="card__title">Badge Preview</h2>
+              <p class="card__subtitle">Live preview of the shields.io badge.</p>
+            </div>
+          </div>
+        </header>
+        <div class="preview">
+          <div class="preview__badge-container">
+            <img id="badge-preview" alt="Badge preview" />
+          </div>
+        </div>
+      </section>
+
+      <section class="card is-hidden" id="step-output" aria-hidden="true">
+        <header class="card__header">
+          <div class="preview-header">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+            </svg>
+            <div>
+              <h2 class="card__title">Copy the URLs</h2>
+              <p class="card__subtitle">Use these in your README or documentation.</p>
+            </div>
+          </div>
+        </header>
+
+        <div class="output">
+          <h3 class="output__title">
+            <span class="output__badge">Customizable</span>
+            JSON badge
+          </h3>
+          <div class="field">
+            <label for="json-url">Badge URL</label>
+            <div class="field__row">
+              <input id="json-url" readonly />
+              <button class="button button--secondary" data-copy-target="json-url">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                Copy
+              </button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="json-markdown">Markdown</label>
+            <div class="field__row">
+              <input id="json-markdown" readonly />
+              <button class="button button--secondary" data-copy-target="json-markdown">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                Copy
+              </button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="json-html">HTML</label>
+            <div class="field__row">
+              <input id="json-html" readonly />
+              <button class="button button--secondary" data-copy-target="json-html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                Copy
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="output">
+          <h3 class="output__title">
+            <span class="output__badge output__badge--secondary">Default styling</span>
+            Direct shield
+          </h3>
+          <div class="field">
+            <label for="direct-url">Badge URL</label>
+            <div class="field__row">
+              <input id="direct-url" readonly />
+              <button class="button button--secondary" data-copy-target="direct-url">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                Copy
+              </button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="direct-markdown">Markdown</label>
+            <div class="field__row">
+              <input id="direct-markdown" readonly />
+              <button class="button button--secondary" data-copy-target="direct-markdown">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                Copy
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="page-footer">
+      <div class="footer-content">
+        <p class="hint footer-links">
+          Made for the open source community · 
+          <a href="https://github.com/dbccccccc/ghcr-badge-generator" target="_blank" rel="noreferrer">View on GitHub</a>
+        </p>
+      </div>
+    </footer>
+
+    <div id="toast" role="status" aria-live="polite">
+      <svg class="toast-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+      <span class="toast-message"></span>
+    </div>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
+
